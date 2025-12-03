@@ -1,0 +1,41 @@
+name: Oxygenated
+version: '1.0-SNAPSHOT'
+main: org.GalacticNuclei.oxygenated.Oxygenated
+api-version: '1.21'
+load: STARTUP
+description: A utility for server owners
+commands:
+  broadcast:
+    description: Broadcast a message
+    usage: /broadcast <message>
+    permission: oxygenated.broadcast
+
+  heal:
+    description: Heal yourself or another player
+    usage: /heal [player]
+    permission: oxygenated.heal
+
+  day:
+    description: Set the time to day.
+    usage: /day
+    permission: oxygenated.time.day
+
+  night:
+    description: Set the time to night.
+    usage: /night
+    permission: oxygenated.time.night
+
+  noon:
+    description: Set the time to noon.
+    usage: /noon
+    permission: oxygenated.time.noon
+
+  sunset:
+    description: Set the time to sunset.
+    usage: /sunset
+    permission: oxygenated.time.sunset
+
+  sunrise:
+    description: Set the time to sunrise.
+    usage: /sunrise
+    permission: oxygenated.time.sunrise
