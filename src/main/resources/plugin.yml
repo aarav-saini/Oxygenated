@@ -47,3 +47,11 @@ commands:
     description: Toggle SocialSpy for private messages.
     usage: /socialspy
     permission: oxygenated.socialspy
+  clearchat:
+    description: Clear your chat or another player's chat.
+    usage: /clearchat [player]
+    permission: oxygenated.clearchat
+  reloadoxygenated:
+    description: Reload the Oxygenated plugin config
+    usage: /reloadoxygenated
+    permission: oxygenated.reload

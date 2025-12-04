@@ -1,4 +1,4 @@
-package org.GalacticNuclei.oxygenated.commands;
+package org.GalacticNuclei.oxygenated.commands.time;
 
 import org.GalacticNuclei.oxygenated.Msg;
 import org.bukkit.Bukkit;

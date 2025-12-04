@@ -1,6 +1,7 @@
 package org.GalacticNuclei.oxygenated.commands;
 
 import org.GalacticNuclei.oxygenated.Msg;
+import org.GalacticNuclei.oxygenated.Oxygenated;
 import org.bukkit.Bukkit;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.command.Command;
@@ -10,6 +11,7 @@ import org.bukkit.entity.Player;
 
 public class Heal implements CommandExecutor {
 
+    private final Oxygenated plugin = Oxygenated.getInstance();
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 
@@ -56,19 +58,36 @@ public class Heal implements CommandExecutor {
 
     private void heal(Player player) {
 
+        // Read config fresh each time (respects /reloadoxygenated)
+        boolean potionEffectsCleared = plugin.getConfig().getBoolean("heal.potion-effects-cleared", true);
+        boolean hungerRestored = plugin.getConfig().getBoolean("heal.hunger-restored", true);
+        boolean saturationRestored = plugin.getConfig().getBoolean("heal.saturation-restored", true);
+        boolean fireExtinguished = plugin.getConfig().getBoolean("heal.fire-extinguished", true);
+
         // Fully restore health
         double maxHealth = player.getAttribute(Attribute.MAX_HEALTH).getValue();
         player.setHealth(maxHealth);
 
-        // Restore hunger & saturation
-        player.setFoodLevel(20);
-        player.setSaturation(20f);
+        // Restore hunger if enabled
+        if (hungerRestored) {
+            player.setFoodLevel(20);
+        }
 
-        // Remove fire
-        player.setFireTicks(0);
+        // Restore saturation if enabled
+        if (saturationRestored) {
+            player.setSaturation(20f);
+        }
 
-        // Remove potion effects
-        player.getActivePotionEffects().forEach(effect ->
-                player.removePotionEffect(effect.getType()));
+        // Extinguish fire if enabled
+        if (fireExtinguished) {
+            player.setFireTicks(0);
+        }
+
+        // Remove potion effects if enabled
+        if (potionEffectsCleared) {
+            player.getActivePotionEffects().forEach(effect ->
+                    player.removePotionEffect(effect.getType()));
+        }
     }
+
 }

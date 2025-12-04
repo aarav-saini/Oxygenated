@@ -1,0 +1,35 @@
+# OXYGENATED CONFIG FILE
+# Use minimessage formatting (https://docs.papermc.io/adventure/minimessage/)
+# Do not change anything if you do not know what you're doing!
+
+#----------
+# BROADCAST
+#----------
+
+broadcast:
+  # The prefix to use in the prefix of the chat message.
+  prefix: "<gold>[<bold>BROADCAST</bold>]</gold>"
+  # The time (in ticks) it takes for the title to appear at full opacity.
+  fade-in-ticks: 20
+  # The time (in ticks) it takes for the title to disappear from full opacity.
+  fade-out-ticks: 20
+  # The time that the title stays at full opacity for.
+  stay-ticks: 60
+  # The volume of the ping sound.
+  sound-volume: 1
+  # The pitch of the ping sound.
+  sound-pitch: 1
+  # Whether to enable the title.
+  title-enabled: true
+  # Title text
+  title-text: "BROADCAST"
+
+heal:
+  # If hunger should be restored
+  hunger-restored: true
+  # If potion effects should be cleared
+  potion-effects-cleared: true
+  # If saturation should be restored:
+  saturation-restored: true
+  # If fire should be extinguished
+  fire-extingushed: true

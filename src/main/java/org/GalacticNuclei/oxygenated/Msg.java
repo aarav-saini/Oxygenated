@@ -7,7 +7,7 @@ import org.bukkit.command.CommandSender;
 public class Msg {
 
     private static final MiniMessage mm = MiniMessage.miniMessage();
-    private static String defaultPrefix = "<gray>[<aqua>Oxygenated</aqua>]</gray> ";
+    private static String defaultPrefix = "<gray>[<bold>Oxygenated</bold>]</gray> ";
 
     public static void send(CommandSender sender, String message) {
         sendWithPrefix(sender, message, defaultPrefix);
