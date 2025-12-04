@@ -9,12 +9,13 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 public class Broadcast implements CommandExecutor {
     private final Oxygenated plugin = Oxygenated.getInstance();
 
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+    public boolean onCommand(CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
         String prefix = plugin.getConfig().getString("broadcast.prefix");
         int fadeIn = plugin.getConfig().getInt("broadcast.fade-in-ticks");
         int stay = plugin.getConfig().getInt("broadcast.stay-ticks");
@@ -35,17 +36,12 @@ public class Broadcast implements CommandExecutor {
 
         String message = String.join(" ", args);
 
-        // Sending title, chat message, and sound to each player
         for (Player player : Bukkit.getOnlinePlayers()) {
-            // Legacy title (Bukkit 1.8-1.20)
-            if (titleEnabled) {
+            if (titleEnabled)
                 player.sendTitle(ChatColor.GOLD + titleText, ChatColor.WHITE + message, fadeIn, stay, fadeOut);
-            }
 
-            // Chat message
             Msg.sendRaw(player, prefix + " " + message);
 
-            // Sound
             player.playSound(player.getLocation(), Sound.ENTITY_ARROW_HIT_PLAYER, soundVolume, soundPitch);
         }
 

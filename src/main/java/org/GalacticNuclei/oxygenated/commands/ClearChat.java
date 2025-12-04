@@ -6,23 +6,21 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 public class ClearChat implements CommandExecutor {
 
     private static final int CLEAR_LINES = 200;
 
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
 
-        // /clearchat — clear everyone's chat
         if (args.length == 0) {
 
             clearChatForAll();
             Msg.send(sender, "<green>Chat has been cleared for all players.");
             return true;
         }
-
-        // /clearchat <player> — clear chat for specific player
         Player target = Bukkit.getPlayer(args[0]);
 
         if (target == null) {

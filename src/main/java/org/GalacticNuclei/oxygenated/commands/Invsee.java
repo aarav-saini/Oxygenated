@@ -6,26 +6,22 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 public class Invsee implements CommandExecutor {
 
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-
-        // Only players can use /invsee
-        if (!(sender instanceof Player)) {
+    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
+        if (!(sender instanceof Player viewer)) {
             Msg.send(sender, "<red>Only players may use this command.");
             return true;
         }
-
-        Player viewer = (Player) sender;
 
         if (!viewer.hasPermission("oxygenated.invsee")) {
             Msg.send(viewer, "<red>You do not have permission.");
             return true;
         }
 
-        // /invsee <player>
         if (args.length != 1) {
             Msg.send(viewer, "<yellow>Usage: /invsee <player>");
             return true;
@@ -45,7 +41,6 @@ public class Invsee implements CommandExecutor {
     }
 
     private void openInventory(Player viewer, Player target) {
-        // This opens the target's live inventory for the viewer to inspect/edit. [web:99][web:102]
         viewer.openInventory(target.getInventory());
     }
 }

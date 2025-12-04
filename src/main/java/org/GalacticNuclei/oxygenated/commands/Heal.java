@@ -8,17 +8,19 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.Objects;
 
 public class Heal implements CommandExecutor {
 
     private final Oxygenated plugin = Oxygenated.getInstance();
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
 
-        // /heal — self
         if (args.length == 0) {
 
-            if (!(sender instanceof Player)) {
+            if (!(sender instanceof Player player)) {
                 Msg.send(sender, "<red>Only players may heal themselves.");
                 return true;
             }
@@ -28,14 +30,12 @@ public class Heal implements CommandExecutor {
                 return true;
             }
 
-            Player player = (Player) sender;
             heal(player);
 
             Msg.send(player, "<green>You have been healed.");
             return true;
         }
 
-        // /heal <player> — heal others
         if (!sender.hasPermission("oxygenated.heal.others")) {
             Msg.send(sender, "<red>You do not have permission to heal others.");
             return true;
@@ -58,32 +58,26 @@ public class Heal implements CommandExecutor {
 
     private void heal(Player player) {
 
-        // Read config fresh each time (respects /reloadoxygenated)
         boolean potionEffectsCleared = plugin.getConfig().getBoolean("heal.potion-effects-cleared", true);
         boolean hungerRestored = plugin.getConfig().getBoolean("heal.hunger-restored", true);
         boolean saturationRestored = plugin.getConfig().getBoolean("heal.saturation-restored", true);
         boolean fireExtinguished = plugin.getConfig().getBoolean("heal.fire-extinguished", true);
 
-        // Fully restore health
-        double maxHealth = player.getAttribute(Attribute.MAX_HEALTH).getValue();
+        double maxHealth = Objects.requireNonNull(player.getAttribute(Attribute.MAX_HEALTH)).getValue();
         player.setHealth(maxHealth);
 
-        // Restore hunger if enabled
         if (hungerRestored) {
             player.setFoodLevel(20);
         }
 
-        // Restore saturation if enabled
         if (saturationRestored) {
             player.setSaturation(20f);
         }
 
-        // Extinguish fire if enabled
         if (fireExtinguished) {
             player.setFireTicks(0);
         }
 
-        // Remove potion effects if enabled
         if (potionEffectsCleared) {
             player.getActivePotionEffects().forEach(effect ->
                     player.removePotionEffect(effect.getType()));

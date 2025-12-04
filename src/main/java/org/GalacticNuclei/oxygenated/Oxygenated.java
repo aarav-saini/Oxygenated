@@ -7,6 +7,9 @@ import org.GalacticNuclei.oxygenated.commands.time.Noon;
 import org.GalacticNuclei.oxygenated.commands.time.Sunrise;
 import org.GalacticNuclei.oxygenated.commands.time.Sunset;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import java.util.Objects;
+
 public final class Oxygenated extends JavaPlugin {
 
     private static Oxygenated instance;
@@ -16,18 +19,20 @@ public final class Oxygenated extends JavaPlugin {
         saveDefaultConfig();
         instance = this;
 //        COMMANDS
-        getCommand("broadcast").setExecutor(new Broadcast());
-        getCommand("heal").setExecutor(new Heal());
-        getCommand("day").setExecutor(new Day());
-        getCommand("night").setExecutor(new Night());
-        getCommand("noon").setExecutor(new Noon());
-        getCommand("sunset").setExecutor(new Sunset());
-        getCommand("sunrise").setExecutor(new Sunrise());
-        getCommand("socialspy").setExecutor(new SocialSpy());
-        getCommand("reloadoxygenated").setExecutor(new Reload());
+        Objects.requireNonNull(getCommand("broadcast")).setExecutor(new Broadcast());
+        Objects.requireNonNull(getCommand("heal")).setExecutor(new Heal());
+        Objects.requireNonNull(getCommand("day")).setExecutor(new Day());
+        Objects.requireNonNull(getCommand("night")).setExecutor(new Night());
+        Objects.requireNonNull(getCommand("noon")).setExecutor(new Noon());
+        Objects.requireNonNull(getCommand("sunset")).setExecutor(new Sunset());
+        Objects.requireNonNull(getCommand("sunrise")).setExecutor(new Sunrise());
+        Objects.requireNonNull(getCommand("socialspy")).setExecutor(new SocialSpy());
+        Objects.requireNonNull(getCommand("reloadoxygenated")).setExecutor(new Reload());
+        Objects.requireNonNull(getCommand("clearchat")).setExecutor(new ClearChat());
+        Objects.requireNonNull(getCommand("invsee")).setExecutor(new Invsee());
 
 //        LISTENERS
-        getServer().getPluginManager().registerEvents(new org.GalacticNuclei.oxygenated.listeners.SocialSpyListener(), this);
+        getServer().getPluginManager().registerEvents(new org.GalacticNuclei.oxygenated.Listeners.SocialSpyListener(), this);
 
 
     }
