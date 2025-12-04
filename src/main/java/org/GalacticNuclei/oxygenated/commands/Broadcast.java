@@ -1,5 +1,4 @@
 package org.GalacticNuclei.oxygenated.commands;
-
 import org.GalacticNuclei.oxygenated.Msg;
 import org.GalacticNuclei.oxygenated.Oxygenated;
 import org.bukkit.Bukkit;
@@ -10,10 +9,8 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
-
 public class Broadcast implements CommandExecutor {
     private final Oxygenated plugin = Oxygenated.getInstance();
-
     @Override
     public boolean onCommand(CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
         String prefix = plugin.getConfig().getString("broadcast.prefix");
@@ -28,23 +25,17 @@ public class Broadcast implements CommandExecutor {
             Msg.send(sender, "<red>You do not have permission.");
             return true;
         }
-
         if (args.length == 0) {
             Msg.send(sender, "<red>Usage: /broadcast <message>");
             return true;
         }
-
         String message = String.join(" ", args);
-
         for (Player player : Bukkit.getOnlinePlayers()) {
             if (titleEnabled)
                 player.sendTitle(ChatColor.GOLD + titleText, ChatColor.WHITE + message, fadeIn, stay, fadeOut);
-
             Msg.sendRaw(player, prefix + " " + message);
-
             player.playSound(player.getLocation(), Sound.ENTITY_ARROW_HIT_PLAYER, soundVolume, soundPitch);
         }
-
         return true;
     }
 }

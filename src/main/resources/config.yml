@@ -32,4 +32,4 @@ heal:
   # If saturation should be restored:
   saturation-restored: true
   # If fire should be extinguished
-  fire-extingushed: true
+  fire-extinguished: true

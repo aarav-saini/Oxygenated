@@ -4,54 +4,161 @@ main: org.GalacticNuclei.oxygenated.Oxygenated
 api-version: '1.21'
 load: STARTUP
 description: A utility for server owners
+
 commands:
   broadcast:
-    description: Broadcast a message
+    description: Broadcast a message to all players
     usage: /broadcast <message>
     permission: oxygenated.broadcast
 
+  clearchat:
+    description: Clear chat.
+    usage: /clearchat
+    permission: oxygenated.clearchat
+
+  clearchatothers:
+    description: Clear the chat of one player.
+    usage: /clearchat <player>
+    permission: oxygenated.clearchat.others
+
   heal:
-    description: Heal yourself or another player
+    description: Heal yourself or others
     usage: /heal [player]
     permission: oxygenated.heal
 
+  healothers:
+    description: Heal other players
+    usage: /heal <player>
+    permission: oxygenated.heal.others
+
   day:
-    description: Set the time to day.
+    description: Set time to day
     usage: /day
     permission: oxygenated.time.day
 
   night:
-    description: Set the time to night.
+    description: Set time to night
     usage: /night
     permission: oxygenated.time.night
 
   noon:
-    description: Set the time to noon.
+    description: Set time to noon
     usage: /noon
     permission: oxygenated.time.noon
 
+  sunrise:
+    description: Set time to sunrise
+    usage: /sunrise
+    permission: oxygenated.time.sunrise
+
   sunset:
-    description: Set the time to sunset.
+    description: Set time to sunset
     usage: /sunset
     permission: oxygenated.time.sunset
 
-  sunrise:
-    description: Set the time to sunrise.
-    usage: /sunrise
-    permission: oxygenated.time.sunrise
-  invsee:
-    description: View another player's inventory.
-    usage: /invsee <player>
-    permission: oxygenated.invsee
   socialspy:
-    description: Toggle SocialSpy for private messages.
+    description: Toggle social spy
     usage: /socialspy
     permission: oxygenated.socialspy
-  clearchat:
-    description: Clear your chat or another player's chat.
-    usage: /clearchat [player]
-    permission: oxygenated.clearchat
+
   reloadoxygenated:
-    description: Reload the Oxygenated plugin config
+    description: Reload Oxygenated plugin config
     usage: /reloadoxygenated
     permission: oxygenated.reload
+
+  warn:
+    description: Warn a player (with subcommands)
+    usage: /warn <player> <reason> | /warn delete <id> | /warn show <player>
+    permission: oxygenated.warn
+
+  warnshow:
+    description: Show player warnings
+    usage: /warn show <player>
+    permission: oxygenated.warn.show
+
+  warndelete:
+    description: Delete warnings
+    usage: /warn delete <id>
+    permission: oxygenated.warn.delete
+
+  ban:
+    description: Ban a player (with subcommands)
+    usage: /ban <player> <reason> [duration] | /ban delete <id> | /ban show <player>
+    permission: oxygenated.ban
+
+  banshow:
+    description: Show player bans
+    usage: /ban show <player>
+    permission: oxygenated.ban.show
+
+  bandelete:
+    description: Delete bans
+    usage: /ban delete <id>
+    permission: oxygenated.ban.delete
+
+  mute:
+    description: Mute a player (with subcommands)
+    usage: /mute <player> <reason> [duration] | /mute delete <id> | /mute show <player>
+    permission: oxygenated.mute
+
+  muteshow:
+    description: Show player mutes
+    usage: /mute show <player>
+    permission: oxygenated.mute.show
+
+  mutedelte:
+    description: Delete mutes
+    usage: /mute delete <id>
+    permission: oxygenated.mute.delete
+
+  modlogs:
+    description: Show complete moderation history
+    usage: /modlogs <player>
+    permission: oxygenated.modlogs
+
+  invsee:
+    description: View another player's inventory
+    usage: /invsee <player>
+    permission: oxygenated.invsee
+
+permissions:
+  oxygenated.*:
+    description: All Oxygenated permissions
+    children:
+      oxygenated.broadcast: true
+      oxygenated.heal: true
+      oxygenated.heal.others: true
+      oxygenated.time.*: true
+      oxygenated.socialspy: true
+      oxygenated.reload: true
+      oxygenated.warn: true
+      oxygenated.warn.show: true
+      oxygenated.warn.delete: true
+      oxygenated.ban: true
+      oxygenated.ban.show: true
+      oxygenated.ban.delete: true
+      oxygenated.mute: true
+      oxygenated.mute.show: true
+      oxygenated.mute.delete: true
+      oxygenated.modlogs: true
+      oxygenated.staff: true
+      oxygenated.invsee: true
+    default: op
+
+  oxygenated.time.*:
+    description: All time commands
+    children:
+      oxygenated.time.day: true
+      oxygenated.time.night: true
+      oxygenated.time.noon: true
+      oxygenated.time.sunrise: true
+      oxygenated.time.sunset: true
+    default: op
+
+  oxygenated.staff:
+    description: Receive staff notifications
+    default: op
+
+  oxygenated.invsee:
+    description: Permission to use /invsee
+    default: op
