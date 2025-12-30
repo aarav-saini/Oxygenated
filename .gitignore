@@ -60,3 +60,8 @@ out/
 .idea/tasks.xml
 .idea/gradle.xml
 .idea/libraries/
+build
+.gradle
+.idea
+gradle
+.idea/AndroidProjectSystem.xml
