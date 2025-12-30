@@ -1,5 +1,4 @@
 package org.GalacticNuclei.oxygenated;
-
 import org.GalacticNuclei.oxygenated.commands.*;
 import org.GalacticNuclei.oxygenated.commands.moderation.Ban;
 import org.GalacticNuclei.oxygenated.commands.moderation.ModLogs;
@@ -8,9 +7,7 @@ import org.GalacticNuclei.oxygenated.commands.moderation.Warn;
 import org.GalacticNuclei.oxygenated.commands.time.*;
 import org.GalacticNuclei.oxygenated.database.SQL;
 import org.bukkit.plugin.java.JavaPlugin;
-
 import java.util.Objects;
-
 public final class Oxygenated extends JavaPlugin {
     private static Oxygenated instance;
     @Override
@@ -33,9 +30,15 @@ public final class Oxygenated extends JavaPlugin {
         Objects.requireNonNull(getCommand("modlogs")).setExecutor(new ModLogs());
         Objects.requireNonNull(getCommand("clearchat")).setExecutor(new ClearChat());
         Objects.requireNonNull(getCommand("invsee")).setExecutor(new Invsee());
-        getServer().getPluginManager().registerEvents(new org.GalacticNuclei.oxygenated.Listeners.SocialSpyListener(), this);
-        getServer().getPluginManager().registerEvents(new org.GalacticNuclei.oxygenated.Listeners.MuteListener(), this);
-        getServer().getPluginManager().registerEvents(new org.GalacticNuclei.oxygenated.Listeners.BanListener(), this);
+        Objects.requireNonNull(getCommand("eventwarp")).setExecutor(new Event());
+        Objects.requireNonNull(getCommand("eventwarp")).setTabCompleter(new Event());
+        getServer().getPluginManager().registerEvents(
+                new org.GalacticNuclei.oxygenated.Listeners.SocialSpyListener(), this);
+        getServer().getPluginManager().registerEvents(
+                new org.GalacticNuclei.oxygenated.Listeners.MuteListener(), this);
+        getServer().getPluginManager().registerEvents(
+                new org.GalacticNuclei.oxygenated.Listeners.BanListener(), this);
+        Msg.loadPrefix();
         getLogger().info("Oxygenated enabled successfully!");
     }
     @Override

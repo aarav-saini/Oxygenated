@@ -37,11 +37,11 @@ public class ModLogs implements CommandExecutor {
                 return true;
             }
             Msg.send(sender, "<gold>=== <yellow>" + target.getName() + "</yellow>'s Moderation History <gold>===");
-            Msg.send(sender, "<gray>Total: <yellow>" + logs.size() + "</yellow> actions");
+            Msg.sendRaw(sender, "<gray>Total: <yellow>" + logs.size() + "</yellow> actions");
             for (ModLogEntry log : logs) {
                 String time = dateFormat.format(new Date(log.timestamp));
                 String expires = log.expires == 0 ? "Permanent" : dateFormat.format(new Date(log.expires));
-                Msg.send(sender, String.format("<gray>[ID:%d] <white>%s <dark_gray>by <yellow>%s</yellow> <gray>at %s %s",
+                Msg.sendRaw(sender, String.format("<gray>[ID:%d] <white>%s <dark_gray>by <yellow>%s</yellow> <gray>at %s %s",
                         log.id, log.actionType, log.staffName, time, getDurationText(log, expires)));
             }
         } catch (SQLException e) {

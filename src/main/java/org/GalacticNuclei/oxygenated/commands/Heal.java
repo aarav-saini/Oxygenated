@@ -12,40 +12,56 @@ import java.util.Objects;
 public class Heal implements CommandExecutor {
     private final Oxygenated plugin = Oxygenated.getInstance();
     @Override
-    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String[] args) {
+    public boolean onCommand(
+            @NotNull CommandSender sender,
+            @NotNull Command command,
+            @NotNull String label,
+            String[] args
+    ) {
         if (args.length == 0) {
             if (!(sender instanceof Player player)) {
-                Msg.send(sender, "<red>Only players may heal themselves.");
+                Msg.send(sender, msg("self-only-player"));
                 return true;
             }
             if (!sender.hasPermission("oxygenated.heal")) {
-                Msg.send(sender, "<red>You do not have permission.");
+                Msg.send(sender, msg("no-permission-self"));
                 return true;
             }
             heal(player);
-            Msg.send(player, "<green>You have been healed.");
+            Msg.send(player, msg("self-healed"));
             return true;
         }
         if (!sender.hasPermission("oxygenated.heal.others")) {
-            Msg.send(sender, "<red>You do not have permission to heal others.");
+            Msg.send(sender, msg("no-permission-others"));
             return true;
         }
         Player target = Bukkit.getPlayer(args[0]);
         if (target == null) {
-            Msg.send(sender, "<red>Player '<white>" + args[0] + "</white>' not found.");
+            Msg.send(sender,
+                    msg("player-not-found")
+                            .replace("{player}", args[0]));
             return true;
         }
         heal(target);
-        Msg.send(sender, "<green>You healed <yellow>" + target.getName() + "</yellow>.");
-        Msg.send(target, "<green>You have been healed by <yellow>" + sender.getName() + "</yellow>.");
+        Msg.send(sender,
+                msg("healed-other")
+                        .replace("{player}", target.getName()));
+        Msg.send(target,
+                msg("healed-by-other")
+                        .replace("{sender}", sender.getName()));
         return true;
     }
     private void heal(Player player) {
-        boolean potionEffectsCleared = plugin.getConfig().getBoolean("heal.potion-effects-cleared", true);
-        boolean hungerRestored = plugin.getConfig().getBoolean("heal.hunger-restored", true);
-        boolean saturationRestored = plugin.getConfig().getBoolean("heal.saturation-restored", true);
-        boolean fireExtinguished = plugin.getConfig().getBoolean("heal.fire-extinguished", true);
-        double maxHealth = Objects.requireNonNull(player.getAttribute(Attribute.MAX_HEALTH)).getValue();
+        boolean potionEffectsCleared =
+                plugin.getConfig().getBoolean("heal.potion-effects-cleared", true);
+        boolean hungerRestored =
+                plugin.getConfig().getBoolean("heal.hunger-restored", true);
+        boolean saturationRestored =
+                plugin.getConfig().getBoolean("heal.saturation-restored", true);
+        boolean fireExtinguished =
+                plugin.getConfig().getBoolean("heal.fire-extinguished", true);
+        double maxHealth = Objects.requireNonNull(
+                player.getAttribute(Attribute.MAX_HEALTH)).getValue();
         player.setHealth(maxHealth);
         if (hungerRestored) {
             player.setFoodLevel(20);
@@ -60,5 +76,11 @@ public class Heal implements CommandExecutor {
             player.getActivePotionEffects().forEach(effect ->
                     player.removePotionEffect(effect.getType()));
         }
+    }
+    private String msg(String key) {
+        return plugin.getConfig().getString(
+                "heal.messages." + key,
+                "<red>Message not configured."
+        );
     }
 }

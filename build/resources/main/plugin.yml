@@ -70,46 +70,15 @@ commands:
     description: Warn a player (with subcommands)
     usage: /warn <player> <reason> | /warn delete <id> | /warn show <player>
     permission: oxygenated.warn
-
-  warnshow:
-    description: Show player warnings
-    usage: /warn show <player>
-    permission: oxygenated.warn.show
-
-  warndelete:
-    description: Delete warnings
-    usage: /warn delete <id>
-    permission: oxygenated.warn.delete
-
   ban:
     description: Ban a player (with subcommands)
     usage: /ban <player> <reason> [duration] | /ban delete <id> | /ban show <player>
     permission: oxygenated.ban
 
-  banshow:
-    description: Show player bans
-    usage: /ban show <player>
-    permission: oxygenated.ban.show
-
-  bandelete:
-    description: Delete bans
-    usage: /ban delete <id>
-    permission: oxygenated.ban.delete
-
   mute:
     description: Mute a player (with subcommands)
     usage: /mute <player> <reason> [duration] | /mute delete <id> | /mute show <player>
     permission: oxygenated.mute
-
-  muteshow:
-    description: Show player mutes
-    usage: /mute show <player>
-    permission: oxygenated.mute.show
-
-  mutedelte:
-    description: Delete mutes
-    usage: /mute delete <id>
-    permission: oxygenated.mute.delete
 
   modlogs:
     description: Show complete moderation history
@@ -120,6 +89,11 @@ commands:
     description: View another player's inventory
     usage: /invsee <player>
     permission: oxygenated.invsee
+
+  eventwarp:
+    description: Manage event warps
+    usage: /eventwarp <add|delete|enable|disable|list|tp>
+    permission: oxygenated.eventwarp
 
 permissions:
   oxygenated.*:
@@ -162,3 +136,37 @@ permissions:
   oxygenated.invsee:
     description: Permission to use /invsee
     default: op
+  oxygenated.eventwarp:
+    description: Base permission to use eventwarp
+    default: op
+    children:
+      oxygenated.eventwarp.add: true
+      oxygenated.eventwarp.delete: true
+      oxygenated.eventwarp.enable: true
+      oxygenated.eventwarp.disable: true
+      oxygenated.eventwarp.list: true
+      oxygenated.eventwarp.tp: true
+
+    oxygenated.eventwarp.add:
+      description: Permission to add new event warps
+      default: op
+
+    oxygenated.eventwarp.delete:
+      description: Permission to delete event warps
+      default: op
+
+    oxygenated.eventwarp.enable:
+      description: Permission to enable event warps
+      default: op
+
+    oxygenated.eventwarp.disable:
+      description: Permission to disable event warps
+      default: op
+
+    oxygenated.eventwarp.list:
+      description: Permission to list all event warps
+      default: op
+
+    oxygenated.eventwarp.tp:
+      description: Permission to teleport players to a warp
+      default: op

@@ -7,44 +7,166 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+
 public class SQL {
+
+    private static final String DB_URL = "jdbc:sqlite:plugins/Oxygenated/Oxygenated.db";
+
     private static final String WARNINGS_TABLE = "warnings";
     private static final String BANS_TABLE = "bans";
     private static final String MUTES_TABLE = "mutes";
-    private static final String DB_URL = "jdbc:sqlite:plugins/Oxygenated/Oxygenated.db";
+    private static final String EVENT_WARPS_TABLE = "event_warps";
+
+    /* ===============================
+       DATABASE INITIALIZATION
+    =============================== */
+
     public static void initDatabase(Oxygenated plugin) {
         try (Connection conn = DriverManager.getConnection(DB_URL);
              Statement stmt = conn.createStatement()) {
+
+            // WARNINGS
             stmt.execute("CREATE TABLE IF NOT EXISTS " + WARNINGS_TABLE + " (" +
-                    "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                    "uuid VARCHAR(36) NOT NULL, " +
-                    "player_name VARCHAR(16) NOT NULL, " +
-                    "reason TEXT NOT NULL, " +
-                    "warned_by VARCHAR(16) NOT NULL, " +
+                    "id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                    "uuid VARCHAR(36) NOT NULL," +
+                    "player_name VARCHAR(16) NOT NULL," +
+                    "reason TEXT NOT NULL," +
+                    "warned_by VARCHAR(16) NOT NULL," +
                     "timestamp BIGINT NOT NULL)");
             stmt.execute("CREATE INDEX IF NOT EXISTS idx_warnings_uuid ON " + WARNINGS_TABLE + "(uuid)");
+
+            // BANS
             stmt.execute("CREATE TABLE IF NOT EXISTS " + BANS_TABLE + " (" +
-                    "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                    "uuid VARCHAR(36) NOT NULL, " +
-                    "player_name VARCHAR(16) NOT NULL, " +
-                    "reason TEXT NOT NULL, " +
-                    "banned_by VARCHAR(16) NOT NULL, " +
-                    "timestamp BIGINT NOT NULL, " +
+                    "id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                    "uuid VARCHAR(36) NOT NULL," +
+                    "player_name VARCHAR(16) NOT NULL," +
+                    "reason TEXT NOT NULL," +
+                    "banned_by VARCHAR(16) NOT NULL," +
+                    "timestamp BIGINT NOT NULL," +
                     "ban_expires BIGINT NOT NULL)");
             stmt.execute("CREATE INDEX IF NOT EXISTS idx_bans_uuid ON " + BANS_TABLE + "(uuid)");
+
+            // MUTES
             stmt.execute("CREATE TABLE IF NOT EXISTS " + MUTES_TABLE + " (" +
-                    "id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                    "uuid VARCHAR(36) NOT NULL, " +
-                    "player_name VARCHAR(16) NOT NULL, " +
-                    "reason TEXT NOT NULL, " +
-                    "muted_by VARCHAR(16) NOT NULL, " +
-                    "timestamp BIGINT NOT NULL, " +
+                    "id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                    "uuid VARCHAR(36) NOT NULL," +
+                    "player_name VARCHAR(16) NOT NULL," +
+                    "reason TEXT NOT NULL," +
+                    "muted_by VARCHAR(16) NOT NULL," +
+                    "timestamp BIGINT NOT NULL," +
                     "mute_expires BIGINT NOT NULL)");
             stmt.execute("CREATE INDEX IF NOT EXISTS idx_mutes_uuid ON " + MUTES_TABLE + "(uuid)");
+
+            // EVENT WARPS (DISABLED BY DEFAULT)
+            stmt.execute("CREATE TABLE IF NOT EXISTS " + EVENT_WARPS_TABLE + " (" +
+                    "name TEXT PRIMARY KEY," +
+                    "world TEXT NOT NULL," +
+                    "x REAL NOT NULL," +
+                    "y REAL NOT NULL," +
+                    "z REAL NOT NULL," +
+                    "enabled INTEGER NOT NULL)");
+
             plugin.getLogger().info("Database initialized successfully.");
+
         } catch (SQLException e) {
-            plugin.getLogger().severe("Failed to initialize database: " + e.getMessage());
+            plugin.getLogger().severe("Database initialization failed: " + e.getMessage());
         }
+    }
+
+    /* ===============================
+       EVENT WARPS
+    =============================== */
+
+    public record EventWarp(
+            String name,
+            String world,
+            double x,
+            double y,
+            double z,
+            boolean enabled
+    ) {}
+
+    public static void addEventWarp(String name, String world, double x, double y, double z) throws SQLException {
+        try (Connection conn = DriverManager.getConnection(DB_URL);
+             PreparedStatement stmt = conn.prepareStatement(
+                     "INSERT INTO " + EVENT_WARPS_TABLE +
+                             " (name, world, x, y, z, enabled) VALUES (?, ?, ?, ?, ?, 0)")) {
+            stmt.setString(1, name.toLowerCase());
+            stmt.setString(2, world);
+            stmt.setDouble(3, x);
+            stmt.setDouble(4, y);
+            stmt.setDouble(5, z);
+            stmt.executeUpdate();
+        }
+    }
+
+    public static boolean eventWarpExists(String name) throws SQLException {
+        try (Connection conn = DriverManager.getConnection(DB_URL);
+             PreparedStatement stmt = conn.prepareStatement(
+                     "SELECT 1 FROM " + EVENT_WARPS_TABLE + " WHERE name = ?")) {
+            stmt.setString(1, name.toLowerCase());
+            return stmt.executeQuery().next();
+        }
+    }
+
+    public static void setEventWarpEnabled(String name, boolean enabled) throws SQLException {
+        try (Connection conn = DriverManager.getConnection(DB_URL);
+             PreparedStatement stmt = conn.prepareStatement(
+                     "UPDATE " + EVENT_WARPS_TABLE + " SET enabled = ? WHERE name = ?")) {
+            stmt.setInt(1, enabled ? 1 : 0);
+            stmt.setString(2, name.toLowerCase());
+            stmt.executeUpdate();
+        }
+    }
+
+    public static void deleteEventWarp(String name) throws SQLException {
+        try (Connection conn = DriverManager.getConnection(DB_URL);
+             PreparedStatement stmt = conn.prepareStatement(
+                     "DELETE FROM " + EVENT_WARPS_TABLE + " WHERE name = ?")) {
+            stmt.setString(1, name.toLowerCase());
+            stmt.executeUpdate();
+        }
+    }
+
+    public static EventWarp getEventWarp(String name) throws SQLException {
+        try (Connection conn = DriverManager.getConnection(DB_URL);
+             PreparedStatement stmt = conn.prepareStatement(
+                     "SELECT * FROM " + EVENT_WARPS_TABLE + " WHERE name = ?")) {
+            stmt.setString(1, name.toLowerCase());
+            ResultSet rs = stmt.executeQuery();
+
+            if (!rs.next()) return null;
+
+            return new EventWarp(
+                    rs.getString("name"),
+                    rs.getString("world"),
+                    rs.getDouble("x"),
+                    rs.getDouble("y"),
+                    rs.getDouble("z"),
+                    rs.getInt("enabled") == 1
+            );
+        }
+    }
+
+    public static List<EventWarp> getAllEventWarps() throws SQLException {
+        List<EventWarp> warps = new ArrayList<>();
+        try (Connection conn = DriverManager.getConnection(DB_URL);
+             PreparedStatement stmt = conn.prepareStatement(
+                     "SELECT * FROM " + EVENT_WARPS_TABLE)) {
+
+            ResultSet rs = stmt.executeQuery();
+            while (rs.next()) {
+                warps.add(new EventWarp(
+                        rs.getString("name"),
+                        rs.getString("world"),
+                        rs.getDouble("x"),
+                        rs.getDouble("y"),
+                        rs.getDouble("z"),
+                        rs.getInt("enabled") == 1
+                ));
+            }
+        }
+        return warps;
     }
     public static void addWarning(Player player, String reason, String warnedBy) throws SQLException {
         try (Connection conn = DriverManager.getConnection(DB_URL);
@@ -98,7 +220,6 @@ public class SQL {
             }
         }
     }
-
     public record Warning(int id, UUID uuid, String playerName, String reason, String warnedBy, long timestamp) {
     }
     public static void addBan(Player player, String reason, String bannedBy, long banExpires) throws SQLException {
@@ -155,7 +276,7 @@ public class SQL {
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
                 long expires = rs.getLong("ban_expires");
-                return expires == 0 || expires > now; // permanent or still active ban
+                return expires == 0 || expires > now;
             }
             return false;
         }
@@ -217,7 +338,7 @@ public class SQL {
             ResultSet rs = stmt.executeQuery();
             if (rs.next()) {
                 long expires = rs.getLong("mute_expires");
-                return expires == 0 || expires > now; // Permanent or still active
+                return expires == 0 || expires > now;
             }
             return false;
         }

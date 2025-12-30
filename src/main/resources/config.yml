@@ -2,34 +2,70 @@
 # Use minimessage formatting (https://docs.papermc.io/adventure/minimessage/)
 # Do not change anything if you do not know what you're doing!
 
+#------------
+# MAIN PLUGIN | RESTART/RELOAD AFTER EDITING THIS SECTION
+#------------
+default-prefix: "<gray>[<bold>OXYGENATED</bold>]</gray>"
+
 #----------
 # BROADCAST
 #----------
 
 broadcast:
-  # The prefix to use in the prefix of the chat message.
   prefix: "<gold>[<bold>BROADCAST</bold>]</gold>"
-  # The time (in ticks) it takes for the title to appear at full opacity.
   fade-in-ticks: 20
-  # The time (in ticks) it takes for the title to disappear from full opacity.
   fade-out-ticks: 20
-  # The time that the title stays at full opacity for.
   stay-ticks: 60
-  # The volume of the ping sound.
   sound-volume: 1
-  # The pitch of the ping sound.
   sound-pitch: 1
-  # Whether to enable the title.
   title-enabled: true
-  # Title text
   title-text: "BROADCAST"
 
+#-----
+# HEAL
+#-----
+
 heal:
-  # If hunger should be restored
   hunger-restored: true
-  # If potion effects should be cleared
   potion-effects-cleared: true
-  # If saturation should be restored:
   saturation-restored: true
-  # If fire should be extinguished
   fire-extinguished: true
+
+  messages:
+    self-only-player: "<red>Only players may heal themselves."
+    no-permission-self: "<red>You do not have permission."
+    no-permission-others: "<red>You do not have permission to heal others."
+    player-not-found: "<red>Player '<white>{player}</white>' not found."
+    self-healed: "<green>You have been healed."
+    healed-other: "<green>You healed <yellow>{player}</yellow>."
+    healed-by-other: "<green>You have been healed by <yellow>{sender}</yellow>."
+
+
+#----------------
+# EVENT WARP
+#----------------
+
+event-warp:
+
+  # Master toggle for the system
+  enabled: true
+
+  # Whether disabled warps appear in /eventwarp list
+  show-disabled-warps: true
+
+  # Messages (MiniMessage)
+  messages:
+    usage: "<red>Usage: /eventwarp <add|delete|enable|disable|list|tp>"
+    created: "<green>Event warp <yellow>{warp}</yellow> created."
+    deleted: "<green>Event warp <yellow>{warp}</yellow> deleted."
+    enabled: "<green>Event warp <yellow>{warp}</yellow> enabled."
+    disabled: "<red>Event warp <yellow>{warp}</yellow> disabled."
+    not-found: "<red>Warp not found."
+    warp-disabled: "<red>This warp is disabled."
+    teleported: "<green>Teleported <yellow>{count}</yellow> entities."
+    no-entities: "<red>No entities matched the selector."
+    invalid-selector: "<red>Invalid selector."
+    console-add-error: "<red>Only players may create warps."
+
+  # DO NOT EDIT MANUALLY
+  warps: {}
