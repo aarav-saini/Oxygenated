@@ -1,4 +1,4 @@
-package org.GalacticNuclei.oxygenated.commands;
+package org.GalacticNuclei.oxygenated.commands.utility;
 
 import org.GalacticNuclei.oxygenated.Msg;
 import org.GalacticNuclei.oxygenated.database.SQL;
@@ -13,7 +13,7 @@ import java.sql.SQLException;
 import java.util.*;
 import java.util.stream.Stream;
 
-public class Event implements CommandExecutor, TabCompleter {
+public class Warp implements CommandExecutor, TabCompleter {
 
     /* ===============================
        COMMAND
@@ -28,7 +28,7 @@ public class Event implements CommandExecutor, TabCompleter {
     ) {
 
         if (args.length == 0) {
-            Msg.send(sender, "<red>Usage: /eventwarp <add|delete|enable|disable|list|tp>");
+            Msg.send(sender, "<red>Usage: /warp <add|delete|enable|disable|list|tp>");
             return true;
         }
 
@@ -41,7 +41,7 @@ public class Event implements CommandExecutor, TabCompleter {
                    ADD
                 =============================== */
                 case "add" -> {
-                    if (!sender.hasPermission("oxygenated.eventwarp.add")) {
+                    if (!sender.hasPermission("oxygenated.warp.add")) {
                         Msg.send(sender, "<red>You do not have permission to add event warps.");
                         return true;
                     }
@@ -52,18 +52,18 @@ public class Event implements CommandExecutor, TabCompleter {
                     }
 
                     if (args.length < 2) {
-                        Msg.send(sender, "<red>Usage: /eventwarp add <name>");
+                        Msg.send(sender, "<red>Usage: /warp add <name>");
                         return true;
                     }
 
                     String name = args[1].toLowerCase(Locale.ROOT);
 
-                    if (SQL.eventWarpExists(name)) {
+                    if (SQL.warpExists(name)) {
                         Msg.send(sender, "<red>That warp already exists.");
                         return true;
                     }
 
-                    SQL.addEventWarp(
+                    SQL.addwarp(
                             name,
                             player.getWorld().getName(),
                             player.getLocation().getX(),
@@ -78,24 +78,24 @@ public class Event implements CommandExecutor, TabCompleter {
                    DELETE
                 =============================== */
                 case "delete" -> {
-                    if (!sender.hasPermission("oxygenated.eventwarp.delete")) {
+                    if (!sender.hasPermission("oxygenated.warp.delete")) {
                         Msg.send(sender, "<red>You do not have permission to delete event warps.");
                         return true;
                     }
 
                     if (args.length < 2) {
-                        Msg.send(sender, "<red>Usage: /eventwarp delete <name>");
+                        Msg.send(sender, "<red>Usage: /warp delete <name>");
                         return true;
                     }
 
                     String name = args[1].toLowerCase(Locale.ROOT);
 
-                    if (!SQL.eventWarpExists(name)) {
+                    if (!SQL.warpExists(name)) {
                         Msg.send(sender, "<red>That warp does not exist.");
                         return true;
                     }
 
-                    SQL.deleteEventWarp(name);
+                    SQL.deletewarp(name);
                     Msg.send(sender, "<green>Event warp '<yellow>" + name + "</yellow>' deleted.");
                 }
 
@@ -105,24 +105,24 @@ public class Event implements CommandExecutor, TabCompleter {
                 case "enable", "disable" -> {
                     boolean enable = sub.equals("enable");
 
-                    if (!sender.hasPermission("oxygenated.eventwarp." + sub)) {
+                    if (!sender.hasPermission("oxygenated.warp." + sub)) {
                         Msg.send(sender, "<red>You do not have permission to " + sub + " event warps.");
                         return true;
                     }
 
                     if (args.length < 2) {
-                        Msg.send(sender, "<red>Usage: /eventwarp " + sub + " <name>");
+                        Msg.send(sender, "<red>Usage: /warp " + sub + " <name>");
                         return true;
                     }
 
                     String name = args[1].toLowerCase(Locale.ROOT);
 
-                    if (!SQL.eventWarpExists(name)) {
+                    if (!SQL.warpExists(name)) {
                         Msg.send(sender, "<red>That warp does not exist.");
                         return true;
                     }
 
-                    SQL.setEventWarpEnabled(name, enable);
+                    SQL.setwarpEnabled(name, enable);
                     Msg.send(sender, "<green>Event warp '<yellow>" + name + "</yellow>' " +
                             (enable ? "enabled" : "disabled") + ".");
                 }
@@ -131,12 +131,12 @@ public class Event implements CommandExecutor, TabCompleter {
                    LIST
                 =============================== */
                 case "list" -> {
-                    if (!sender.hasPermission("oxygenated.eventwarp.list")) {
+                    if (!sender.hasPermission("oxygenated.warp.list")) {
                         Msg.send(sender, "<red>You do not have permission to list event warps.");
                         return true;
                     }
 
-                    List<SQL.EventWarp> warps = SQL.getAllEventWarps();
+                    List<SQL.warp> warps = SQL.getAllwarps();
 
                     if (warps.isEmpty()) {
                         Msg.send(sender, "<yellow>No event warps exist.");
@@ -145,7 +145,7 @@ public class Event implements CommandExecutor, TabCompleter {
 
                     StringBuilder sb = new StringBuilder("<green>Event Warps: ");
 
-                    for (SQL.EventWarp warp : warps) {
+                    for (SQL.warp warp : warps) {
                         sb.append("<yellow>")
                                 .append(warp.name())
                                 .append("</yellow>")
@@ -161,13 +161,13 @@ public class Event implements CommandExecutor, TabCompleter {
                    TP
                 =============================== */
                 case "tp" -> {
-                    if (!sender.hasPermission("oxygenated.eventwarp.tp")) {
+                    if (!sender.hasPermission("oxygenated.warp.tp")) {
                         Msg.send(sender, "<red>You do not have permission to teleport to event warps.");
                         return true;
                     }
 
                     if (args.length < 2) {
-                        Msg.send(sender, "<red>Usage: /eventwarp tp [player] <warp>");
+                        Msg.send(sender, "<red>Usage: /warp tp [player] <warp>");
                         return true;
                     }
 
@@ -190,7 +190,7 @@ public class Event implements CommandExecutor, TabCompleter {
                         warpName = args[2];
                     }
 
-                    SQL.EventWarp warp = SQL.getEventWarp(warpName.toLowerCase(Locale.ROOT));
+                    SQL.warp warp = SQL.getwarp(warpName.toLowerCase(Locale.ROOT));
 
                     if (warp == null) {
                         Msg.send(sender, "<red>That warp does not exist.");
@@ -219,7 +219,7 @@ public class Event implements CommandExecutor, TabCompleter {
                 }
 
                 default -> Msg.send(sender,
-                        "<red>Usage: /eventwarp <add|delete|enable|disable|list|tp>");
+                        "<red>Usage: /warp <add|delete|enable|disable|list|tp>");
             }
         } catch (SQLException e) {
             Msg.send(sender, "<red>Database error occurred.");
@@ -257,14 +257,14 @@ public class Event implements CommandExecutor, TabCompleter {
 
             if (args.length == 2 &&
                     List.of("delete", "enable", "disable").contains(args[0].toLowerCase())) {
-                return SQL.getAllEventWarps().stream()
-                        .map(SQL.EventWarp::name)
+                return SQL.getAllwarps().stream()
+                        .map(SQL.warp::name)
                         .toList();
             }
 
             if (args.length == 3 && args[0].equalsIgnoreCase("tp")) {
-                return SQL.getAllEventWarps().stream()
-                        .map(SQL.EventWarp::name)
+                return SQL.getAllwarps().stream()
+                        .map(SQL.warp::name)
                         .toList();
             }
 

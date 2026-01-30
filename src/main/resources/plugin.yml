@@ -6,6 +6,11 @@ load: STARTUP
 description: A utility for server owners
 
 commands:
+  rules:
+    description: Show server rules
+    usage: /rules [page]
+    permission: rules.view
+
   broadcast:
     description: Broadcast a message to all players
     usage: /broadcast <message>
@@ -90,10 +95,9 @@ commands:
     usage: /invsee <player>
     permission: oxygenated.invsee
 
-  eventwarp:
+  warp:
     description: Manage event warps
-    usage: /eventwarp <add|delete|enable|disable|list|tp>
-    permission: oxygenated.eventwarp
+    usage: /warp <add|delete|enable|disable|list|tp>
 
 permissions:
   oxygenated.*:
@@ -136,37 +140,39 @@ permissions:
   oxygenated.invsee:
     description: Permission to use /invsee
     default: op
-  oxygenated.eventwarp:
-    description: Base permission to use eventwarp
+  oxygenated.warp:
+    description: Base permission to use warp
     default: op
     children:
-      oxygenated.eventwarp.add: true
-      oxygenated.eventwarp.delete: true
-      oxygenated.eventwarp.enable: true
-      oxygenated.eventwarp.disable: true
-      oxygenated.eventwarp.list: true
-      oxygenated.eventwarp.tp: true
+      oxygenated.warp.add: true
+      oxygenated.warp.delete: true
+      oxygenated.warp.enable: true
+      oxygenated.warp.disable: true
+      oxygenated.warp.list: true
+      oxygenated.warp.tp: true
 
-    oxygenated.eventwarp.add:
+    oxygenated.warp.add:
       description: Permission to add new event warps
       default: op
 
-    oxygenated.eventwarp.delete:
+    oxygenated.warp.delete:
       description: Permission to delete event warps
       default: op
 
-    oxygenated.eventwarp.enable:
+    oxygenated.warp.enable:
       description: Permission to enable event warps
       default: op
 
-    oxygenated.eventwarp.disable:
+    oxygenated.warp.disable:
       description: Permission to disable event warps
       default: op
 
-    oxygenated.eventwarp.list:
+    oxygenated.warp.list:
       description: Permission to list all event warps
-      default: op
+      default: true
 
-    oxygenated.eventwarp.tp:
+    oxygenated.warp.tp:
       description: Permission to teleport players to a warp
-      default: op
+      default: true
+  oxygenated.rules.view:
+    default: true

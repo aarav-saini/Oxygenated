@@ -1,6 +1,6 @@
 package org.GalacticNuclei.oxygenated.Listeners;
 import org.GalacticNuclei.oxygenated.Msg;
-import org.GalacticNuclei.oxygenated.commands.SocialSpy;
+import org.GalacticNuclei.oxygenated.commands.moderation.SocialSpy;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;

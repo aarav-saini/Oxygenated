@@ -1,4 +1,4 @@
-package org.GalacticNuclei.oxygenated.commands;
+package org.GalacticNuclei.oxygenated.commands.moderation;
 import org.GalacticNuclei.oxygenated.Msg;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;

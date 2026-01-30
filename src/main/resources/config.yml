@@ -1,6 +1,7 @@
 # OXYGENATED CONFIG FILE
 # Use minimessage formatting (https://docs.papermc.io/adventure/minimessage/)
 # Do not change anything if you do not know what you're doing!
+# This file is VERY large. I recommend using the find feature (if present) to go through it.
 
 #------------
 # MAIN PLUGIN | RESTART/RELOAD AFTER EDITING THIS SECTION
@@ -69,3 +70,17 @@ event-warp:
 
   # DO NOT EDIT MANUALLY
   warps: {}
+
+#----------------
+# RULES
+#----------------
+rules:
+  per-page: 6
+  lines:
+    - "<yellow>1)</yellow> <white>Be respectful.</white>"
+    - "<yellow>2)</yellow> <white>No cheating.</white>"
+    - "<yellow>3)</yellow> <white>No griefing.</white>"
+    - "<yellow>4)</yellow> <white>No spam.</white>"
+    - "<yellow>5)</yellow> <white>No inappropriate skins/usernames.</white>"
+    - "<yellow>6)</yellow> <white>Listen to staff.</white>"
+    - "<yellow>7)</yellow> <white>No exploiting glitches.</white>"
